@@ -1,2 +1,2 @@
-# Visualization-basics-for-EPINOR-tutorial
+# Visualization basics for EPINOR - tutorial
 Learnr tutorial
