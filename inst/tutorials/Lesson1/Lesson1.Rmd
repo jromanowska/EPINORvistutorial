@@ -1,0 +1,125 @@
+---
+title: "Basics of ggplot2"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Setup
+
+Load the necessary libraries
+
+```{r}
+library(tibble)
+library(ggplot2)
+library(tidyr)
+library(readr)
+```
+
+## About `ggplot2`
+
+A plot in `ggplot2` consists of several layers:
+
+1. data
+    - strict format: tidy data!
+    - one row per datapoint
+    - all grouping must be included in the data
+
+2. aesthetics (`aes`) ([original documentation](https://ggplot2.tidyverse.org/reference/index.html#section-aesthetics))
+    - how to map the data to the graph?
+    - which column is *x*, *y*, ...
+    - which column provides grouping (based on the grouping, one can either connect points into lines, split a graph into several facets, or color differently each group)
+
+3. `geom`s ([original documentation](https://ggplot2.tidyverse.org/reference/index.html#section-geoms))
+    - how to visualize the data?
+    - points (`geom_point`), lines (`geom_line`), bars (`geom_bar`), etc.
+    - `geom`s are connected to `stat`s that conduct any necessary pre-processing of data (e.g., `geom_histogram` would first calculate the number of observations in each bin through `stat_bin`)
+
+4. `scale`s ([original documentation](https://ggplot2.tidyverse.org/reference/index.html#section-scales))
+    - any type of data representation on the plot
+    - coordinates: `scale_x_continuous`, `scale_x_discrete`, `scale_x_date`, etc.
+    - colors: `scale_color_manual`, `scale_colour_brewer`, `scale_fill_continuous`, etc.
+
+5. `theme` ([original documentation](https://ggplot2.tidyverse.org/reference/index.html#section-themes))
+    - visual aspects
+    - size and types of fonts
+    - positioning of axes, legends, etc.
+
+Each layer is added to the previous one with a `+` sign. The result can be saved to an object and added upon later.
+
+### Example
+
+Let's read in some data.
+
+```{r}
+hospital_inpatients <- read_csv("data/PasientSomatSykeh2.csv")
+hospital_inpatients
+```
+
+This is publicly available data from SSB (Norwegian Statistics Bureau) on number of in-patients in hospitals in Hordaland between 2012 and 2018.
+
+### Exercise 
+
+*Here's a simple exercise with an empty code chunk provided for entering the answer.*
+
+Write the R code required to add two plus two:
+
+```{r two-plus-two, exercise=TRUE}
+
+```
+
+### Exercise with Code
+
+*Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
+
+Now write a function that adds any two numbers and then call it:
+
+```{r add-function, exercise=TRUE, exercise.lines = 5}
+add <- function() {
+  
+}
+```
+
+## Topic 2
+
+### Exercise with Hint
+
+*Here's an exercise where the chunk is pre-evaulated via the `exercise.eval` option (so the user can see the default output we'd like them to customize). We also add a "hint" to the correct solution via the chunk immediate below labeled `print-limit-hint`.*
+
+Modify the following code to limit the number of rows printed to 5:
+
+```{r print-limit, exercise=TRUE, exercise.eval=TRUE}
+mtcars
+```
+
+```{r print-limit-hint}
+head(mtcars)
+```
+
+### Quiz
+
+*You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
+
+Some questions to verify that you understand the purposes of various base and recommended R packages:
+
+```{r quiz}
+quiz(
+  question("Which package contains functions for installing other R packages?",
+    answer("base"),
+    answer("tools"),
+    answer("utils", correct = TRUE),
+    answer("codetools")
+  ),
+  question("Which of the R packages listed below are used to create plots?",
+    answer("lattice", correct = TRUE),
+    answer("tools"),
+    answer("stats"),
+    answer("grid", correct = TRUE)
+  )
+)
+```
