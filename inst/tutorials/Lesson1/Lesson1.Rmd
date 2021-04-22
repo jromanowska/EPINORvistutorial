@@ -17,6 +17,7 @@ Load the necessary libraries
 ```{r}
 library(tibble)
 library(ggplot2)
+library(dplyr)
 library(tidyr)
 library(readr)
 ```
@@ -63,27 +64,94 @@ hospital_inpatients
 
 This is publicly available data from SSB (Norwegian Statistics Bureau) on number of in-patients in hospitals in Hordaland between 2012 and 2018.
 
-### Exercise 
+Let's plot some numbers: total number of patients per year and per group ("gruppe").
 
-*Here's a simple exercise with an empty code chunk provided for entering the answer.*
+1. Grouping the data
 
-Write the R code required to add two plus two:
+```{r}
+hospital_inpatients_grouped <- hospital_inpatients %>%
+  group_by(aar, gruppe)
 
-```{r two-plus-two, exercise=TRUE}
+# calculate sum of patients per year and group
+hospital_inpatients_summary <- hospital_inpatients_grouped %>%
+  summarise(sum = sum(antall.pasienter))
+hospital_inpatients_summary
+```
+
+2. Plotting    
+Here, we're using simplest type of plot: points.
+
+```{r}
+ggplot(hospital_inpatients_summary,  # define data
+       aes(x = as.factor(aar), y = sum)) +  # define which columns are x and y
+  geom_point() # define way to visualize the data
+```
+
+> NOTE: we used `as.factor` when defining column `aar` as `x` because we want
+the x-axis to be categorical and sice in the `aar` columns are only numbers,
+by default it would be viewed as a continuous variable.
+
+This does not look great - we have four points per year since there are four
+categories ("gruppe"), but we don't know which point is which.
+
+3. Add coloring
+
+Here is the magic of ggplot - we want to add coloring of the points *by one of
+the variables in the dataset*. Therefore, we need to specify aesthetics
+for the `geom_point`.
+
+```{r}
+plot_sum_patients <- ggplot(hospital_inpatients_summary,
+       aes(x = as.factor(aar), y = sum)) +
+  geom_point(aes(col = gruppe))
+plot_sum_patients
+```
+
+...and we get a legend for free!
+
+> NOTE: we can save the plots as objects and then add on to those if we want
+to modify the plot!
+
+### Exercise 1
+
+Plot the same but now using bar chart instead of points (`geom_col`)
+
+```{r geom-col, exercise=TRUE}
 
 ```
 
-### Exercise with Code
+**What happened to the color?**
 
-*Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
+To _fill_ the bars with colors, you need to use the `fill` argument of the
+aesthetics, not the `col` (color) argument. Try this below!
 
-Now write a function that adds any two numbers and then call it:
+```{r geom-col-fill, exercise = TRUE}
 
-```{r add-function, exercise=TRUE, exercise.lines = 5}
-add <- function() {
-  
-}
 ```
+
+
+### Exercise 2
+
+Now plot the same using lines:
+
+```{r geom-lines, exercise=TRUE, exercise.lines = 5}
+plot_sum_patients_lines <- ggplot(hospital_inpatients_summary,
+       aes(x = as.factor(aar), y = sum)) +
+  ___(aes(group = gruppe))
+plot_sum_patients_lines
+```
+
+**What does the `group` argument of the `aes` function do?**
+
+```{r geom-lines-hint}
+# `group` argument helps draw lines connecting the same categories of points
+# run the code below (without the `group` argument) to see how strange the
+# result would be
+ggplot(hospital_inpatients_summary,
+       aes(x = as.factor(aar), y = sum)) +
+  geom_line(aes(col = gruppe))
+```
+
 
 ## Topic 2
 
