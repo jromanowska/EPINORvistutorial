@@ -11,7 +11,49 @@ description: "Learnr tutorial to start off with ggplot2. Created for a short wor
 
 ```{r setup, include=FALSE}
 library(learnr)
+library(tibble)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readr)
+library(patchwork)
+library(scico)
+
 knitr::opts_chunk$set(echo = TRUE)
+
+hospital_inpatients <- read_csv("data/PasientSomatSykeh2.csv")
+hospital_inpatients_grouped <- hospital_inpatients %>%
+  group_by(aar, gruppe)
+
+# calculate sum of patients per year and group
+hospital_inpatients_summary <- hospital_inpatients_grouped %>%
+  summarise(sum = sum(antall.pasienter))
+
+my_plot1 <- ggplot(hospital_inpatients_summary,
+        aes(x = as.factor(aar), y = sum)) +
+	geom_col(aes(fill = gruppe), position = position_dodge())
+
+hospital_inpatients_median <- hospital_inpatients_grouped %>%
+  summarise(median = median(antall.pasienter),
+            stderr = sd(antall.pasienter))
+
+my_plot2 <- ggplot(hospital_inpatients_median,
+                   aes(as.factor(aar), median)) +
+  geom_col(aes(fill = gruppe), position = position_dodge())
+
+final.plot <- ggplot(hospital_inpatients_grouped,
+                      aes(x = as.factor(aar), y = antall.pasienter)) +
+	geom_col(aes(fill = gruppe), position = position_dodge()) +
+	facet_grid(rows = vars(kjonn), cols = vars(alder))
+
+my_plot1_nicer <- my_plot1 +
+  scale_fill_brewer(type = "div", palette = "PRGn",
+                    name = "Type of stay") +
+  xlab("Year") +
+  ylab("Total number of patients") +
+  labs(title = "Number of patients in hospitals per year",
+       subtitle = "groupped by type of stay",
+       caption = "data source: aggregated data from SSB")
 ```
 
 
@@ -181,27 +223,27 @@ sub-plots, called _facets_.
 
 ```{r, fig.cap="No splitting"}
 # plotting totals, grouped, non-stacked
-ggplot( hospital_inpatients_summary,
-        aes( x = as.factor( aar ), y = sum ) ) +
-	geom_col( aes( fill = gruppe ), position = position_dodge() )
+ggplot(hospital_inpatients_summary,
+        aes(x = as.factor(aar), y = sum)) +
+	geom_col(aes(fill = gruppe), position = position_dodge())
 ```
 
 
 ```{r, fig.cap="Splitting once", out.width = "100%", fig.height = 5, fig.width = 8}
 # splitting this - checking difference with regard to gender
-ggplot( hospital_inpatients_grouped,
-        aes( x = as.factor( aar ), y = antall.pasienter ) ) +
-	geom_col( aes( fill = gruppe ), position = position_dodge() ) +
-	facet_wrap( facets = vars( kjonn ) )
+ggplot(hospital_inpatients_grouped,
+        aes(x = as.factor(aar), y = antall.pasienter)) +
+	geom_col(aes(fill = gruppe), position = position_dodge()) +
+	facet_wrap(facets = vars(kjonn))
 ```
 
 
 ```{r, fig.cap="Splitting twice", out.width = "100%", fig.height = 5, fig.width = 8}
 # splitting again - with regard to age
-final.plot <- ggplot( hospital_inpatients_grouped,
-                      aes( x = as.factor( aar ), y = antall.pasienter ) ) +
-	geom_col( aes( fill = gruppe ), position = position_dodge() ) +
-	facet_grid( rows = vars( kjonn ), cols = vars( alder ) )
+final.plot <- ggplot(hospital_inpatients_grouped,
+                      aes(x = as.factor(aar), y = antall.pasienter)) +
+	geom_col(aes(fill = gruppe), position = position_dodge()) +
+	facet_grid(rows = vars(kjonn), cols = vars(alder))
 final.plot
 ```
 
@@ -224,9 +266,9 @@ Of course, we can plot several various types of graphs on one plot.
 by saving it to an object and adding onto the object.
 
 ```{r}
-my_plot1 <- ggplot( hospital_inpatients_summary,
-        aes( x = as.factor( aar ), y = sum ) ) +
-	geom_col( aes( fill = gruppe ), position = position_dodge() )
+my_plot1 <- ggplot(hospital_inpatients_summary,
+        aes(x = as.factor(aar), y = sum)) +
+	geom_col(aes(fill = gruppe), position = position_dodge())
 
 my_plot1 +
   geom_line(aes(group = gruppe))
@@ -290,9 +332,9 @@ my_plot2 +
       ymin = (median - stderr),
       ymax = (median + stderr),
       group = gruppe
-      ),
+     ),
     position = position_dodge(width = 0.9)
-  )
+ )
 ```
 
 ---
@@ -443,14 +485,14 @@ my_plot1_nicer +
     plot.title = element_text(
       size = 20, # text size in pts
       face = "bold"
-    ),
+   ),
     axis.title = element_text(
       size = 16
-    ),
+   ),
     axis.text.x = element_text(
       angle = 90
-    )
-  )
+   )
+ )
 ```
 
 **2. Change the position of the legend**
@@ -459,7 +501,7 @@ my_plot1_nicer +
 my_plot1_nicer +
   theme(
     legend.position = "bottom"
-  )
+ )
 ```
 
 **3. Change the background color**
@@ -468,7 +510,7 @@ my_plot1_nicer +
 my_plot1_nicer +
   theme(
       panel.background = element_rect(fill = "salmon")
-  )
+ )
 ```
 
 
