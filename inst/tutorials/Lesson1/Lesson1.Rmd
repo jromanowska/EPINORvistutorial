@@ -11,11 +11,7 @@ description: "Learnr tutorial to start off with ggplot2. Created for a short wor
 
 ```{r setup, include=FALSE}
 library(learnr)
-library(tibble)
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(readr)
+library(tidyverse)
 library(patchwork)
 library(scico)
 
@@ -62,11 +58,7 @@ my_plot1_nicer <- my_plot1 +
 Load the necessary libraries
 
 ```{r}
-library(tibble)
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(readr)
+library(tidyverse)
 library(patchwork)
 library(scico)
 ```
