@@ -8,7 +8,7 @@ workshop for EPINOR PhD students at Univ.of Bergen.
 Install this package through:
 
 ```
-devtools::install_github(“jromanowska/EPINORvistutorial")
+devtools::install_github("jromanowska/EPINORvistutorial")
 ```
 
 Then, go to the "Tutorial" tab in your RStudio, find the tutorial and click
