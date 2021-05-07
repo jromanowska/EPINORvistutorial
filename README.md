@@ -1,4 +1,4 @@
-# Visualization-basics-for-EPINOR-tutorial
+# Visualization basics for EPINOR - tutorial
 
 Learnr tutorial to start off with ggplot2. Created for a short
 workshop for EPINOR PhD students at Univ.of Bergen.
@@ -13,6 +13,6 @@ Install this package through:
 devtools::install_github("jromanowska/EPINORvistutorial")
 ```
 
-Then, go to the _"Tutorial"_ tab in your RStudio, find the tutorial and click
-_"Start tutorial"_ button. This will open a webpage in the viewer tab, which
-you can enlarge and navigate.
+Then, go to the _"Tutorial"_ tab in your RStudio, find the tutorial with
+the title "Basics of ggplot2" and click on the _"Start tutorial"_ button.
+This will open a webpage in the viewer tab, which you can enlarge and navigate.
