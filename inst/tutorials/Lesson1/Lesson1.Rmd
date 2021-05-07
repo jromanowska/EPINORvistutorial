@@ -13,7 +13,6 @@ description: "Learnr tutorial to start off with ggplot2. Created for a short wor
 library(learnr)
 library(tidyverse)
 library(patchwork)
-library(scico)
 
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -60,7 +59,6 @@ Load the necessary libraries
 ```{r}
 library(tidyverse)
 library(patchwork)
-library(scico)
 ```
 
 ## About `ggplot2`
@@ -167,6 +165,12 @@ Plot the same but now using bar chart instead of points (`geom_col`)
 
 ```
 
+```{r geom-col-solution}
+ggplot(hospital_inpatients_summary,
+       aes(x = as.factor(aar), y = sum)) +
+  geom_col(aes(col = gruppe))
+```
+
 **What happened to the color?**
 
 To _fill_ the bars with colors, you need to use the `fill` argument of the
@@ -176,6 +180,11 @@ aesthetics, not the `col` (color) argument. Try this below!
 
 ```
 
+```{r geom-col-fill-solution}
+ggplot(hospital_inpatients_summary,
+       aes(x = as.factor(aar), y = sum)) +
+  geom_col(aes(fill = gruppe))
+```
 
 ### Exercise 2
 
@@ -188,7 +197,8 @@ plot_sum_patients_lines <- ggplot(hospital_inpatients_summary,
 plot_sum_patients_lines
 ```
 
-**What does the `group` argument of the `aes` function do?**
+**What does the `group` argument of the `aes` function do?** *(check by 
+experimenting in the box above or copying from `Hint` code)*
 
 ```{r geom-lines-hint}
 # `group` argument helps draw lines connecting the same categories of points
@@ -199,7 +209,11 @@ ggplot(hospital_inpatients_summary,
   geom_line(aes(col = gruppe))
 ```
 
-
+```{r geom-lines-solution}
+ggplot(hospital_inpatients_summary,
+       aes(x = as.factor(aar), y = sum)) +
+  geom_line(aes(group = gruppe))
+```
 
 
 
@@ -213,7 +227,7 @@ Sometimes these numbers vary depending on other variables, here age (`alder`) or
 sex (`gender`). With ggplot2, it's easy to split the plot in different
 sub-plots, called _facets_.
 
-```{r, fig.cap="No splitting"}
+```{r, fig.cap="**Figure above:** No splitting"}
 # plotting totals, grouped, non-stacked
 ggplot(hospital_inpatients_summary,
         aes(x = as.factor(aar), y = sum)) +
@@ -221,7 +235,7 @@ ggplot(hospital_inpatients_summary,
 ```
 
 
-```{r, fig.cap="Splitting once", out.width = "100%", fig.height = 5, fig.width = 8}
+```{r, fig.cap="**Figure above:** Splitting once", out.width = "100%", fig.height = 5, fig.width = 8}
 # splitting this - checking difference with regard to gender
 ggplot(hospital_inpatients_grouped,
         aes(x = as.factor(aar), y = antall.pasienter)) +
@@ -230,7 +244,7 @@ ggplot(hospital_inpatients_grouped,
 ```
 
 
-```{r, fig.cap="Splitting twice", out.width = "100%", fig.height = 5, fig.width = 8}
+```{r, fig.cap="**Figure above:** Splitting twice", out.width = "100%", fig.height = 5, fig.width = 8}
 # splitting again - with regard to age
 final.plot <- ggplot(hospital_inpatients_grouped,
                       aes(x = as.factor(aar), y = antall.pasienter)) +
@@ -243,9 +257,16 @@ final.plot
 
 Plot the data using `gruppe` and `kjonn` as facets.
 
-```{r plot_facets, exercise=TRUE, exercise.eval=TRUE, exercise.lines = 5}
+```{r plot_facets, exercise=TRUE, exercise.eval=TRUE, exercise.lines = 5, out.width = "100%", fig.height = 5, fig.width = 8}
 
 
+```
+
+```{r plot_facets-solution, out.width = "100%", fig.height = 5, fig.width = 8}
+ggplot(hospital_inpatients_grouped,
+                      aes(x = as.factor(aar), y = antall.pasienter)) +
+	geom_col(aes(fill = gruppe), position = position_dodge()) +
+	facet_grid(rows = vars(kjonn), cols = vars(gruppe))
 ```
 
 ---
@@ -317,7 +338,7 @@ for the `geom_line` example above
 
 ```
 
-```{r add_errorbars-hint}
+```{r add_errorbars-solution}
 my_plot2 +
   geom_errorbar(
     aes(
@@ -343,7 +364,7 @@ try putting those together:
 
 ```{r, out.width = "120%", fig.height = 4, fig.width = 8}
 # next to each other
-final.plot + my_plot1
+plot_sum_patients + my_plot1
 ```
 
 
@@ -362,6 +383,20 @@ final.plot / my_plot1 +
 ```
 
 
+### Exercise 3
+
+Play with patchworking a bit, if you like!
+
+- make ggplot objects
+- combine 4 plots on the same page, e.g.,:
+
+```{r, eval = FALSE}
+(my_plot1 + my_plot2) / (my_plot3 + my_plot4)
+```
+
+```{r patchwork-fun, exercise = TRUE}
+
+```
 
 
 ## Prettify
@@ -391,7 +426,7 @@ or those with sight problems). There is a very good publication that I
 recommend: https://www.nature.com/articles/s41467-020-19160-7
 
 There are many different palettes available on the net - we will focus on
-those that are available within `ggplot2` and `scico` packages.
+those that are available within `ggplot2`.
 
 **Discrete colors**
 
@@ -419,6 +454,14 @@ my_plot1 +
             position = position_dodge(width = 0.9)) +
   scale_____brewer(type = "div", palette = ___) +
   scale_____brewer(type = "div", palette = ___)
+```
+
+```{r adjust_palettes-solution}
+my_plot1 +
+  geom_line(aes(group = gruppe, col = gruppe),
+            position = position_dodge(width = 0.9)) +
+  scale_fill_brewer(type = "div", palette = "BrBG") +
+  scale_color_brewer(type = "div", palette = "PuOr")
 ```
 
 ### Axes
@@ -464,6 +507,9 @@ Check what happens when you add `theme_minimal()` to our `my_plot1_nicer`.
 
 ```
 
+```{r check_theme_min-solution}
+my_plot1_nicer + theme_minimal()
+```
 ---
 
 To control these visual aspects better, you can check [the documentation](https://ggplot2.tidyverse.org/reference/theme.html). Below, there
