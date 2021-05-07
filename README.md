@@ -8,6 +8,8 @@ workshop for EPINOR PhD students at Univ.of Bergen.
 Install this package through:
 
 ```
+# uncomment the line below if you do not have `devtools` installed:
+# install.packages("devtools")
 devtools::install_github("jromanowska/EPINORvistutorial")
 ```
 
